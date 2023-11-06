@@ -2168,35 +2168,68 @@
 //   location.reload(); 
 // });
   
-function toggleDateInput() {
-      var checkbox = document.getElementById("never-expire-checkbox");
-      var dateInput = document.getElementById("date2");
+// function toggleDateInput() {
+//       var checkbox = document.getElementById("never-expire-checkbox");
+//       var dateInput = document.getElementById("date2");
       
-      if (checkbox.checked) {
-          dateInput.disabled = true;
+//       if (checkbox.checked) {
+//           dateInput.disabled = true;
          
-          $('#date2').val('');
-          $("#terms").val("recpt");
-      } 
-      else {
-          dateInput.disabled = false;
-      }
-  }
+//           $('#date2').val('');
+//           $("#terms").val("recpt");
+//       } 
+//       else {
+//           dateInput.disabled = false;
+//       }
+//   }
 
-  $(document).ready(function() {
+//   $(document).ready(function() {
+//     $('#terms').change(function() {
+//       var va = $(this).val();
+//       var checkbox = $('#never-expire-checkbox')[0];
+//       if (va == 'recpt'){
+//         checkbox.checked = true;
+//         $('#date2')[0].disabled = true;
+//       }
+//       else{
+//         checkbox.checked = false;
+//         $('#date2').disabled = false;
+//       }
+//       });
+//   });
+
+function toggleDateInput() {
+    var checkbox = document.getElementById("never-expire-checkbox");
+    var billDateInput = document.getElementById("date1");
+    var dateInput = document.getElementById("date2");
+
+    if (checkbox.checked) {
+        dateInput.disabled = true; // Disable date input
+        $('#date2').val($('#date1').val()); // Set date2 value to date1 value
+        $("#terms").val("recpt");
+    } else {
+        dateInput.disabled = true; // Disable date input
+    }
+}
+
+$(document).ready(function() {
     $('#terms').change(function() {
-      var va = $(this).val();
-      var checkbox = $('#never-expire-checkbox')[0];
-      if (va == 'recpt'){
-        checkbox.checked = true;
-        $('#date2')[0].disabled = true;
-      }
-      else{
-        checkbox.checked = false;
-        $('#date2').disabled = false;
-      }
-      });
-  });
+        var va = $(this).val();
+        var checkbox = $('#never-expire-checkbox');
+
+        if (va == 'recpt') {
+            checkbox.prop('checked', true); // Check the checkbox
+            $('#date2').val($('#date1').val()); // Set date2 value to date1 value
+            $('#date2').prop('disabled', true); // Disable date input
+        } else {
+            checkbox.prop('checked', false); // Uncheck the checkbox
+            $('#date2').prop('disabled', true); // Disable date input
+        }
+    });
+
+    toggleDateInput(); // Call toggleDateInput after the page loads to prevent dateInput from being enabled on page load
+});
+
 
   $(document).ready(function() {
 

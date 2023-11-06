@@ -4572,34 +4572,68 @@ function reloadPayment() {
   });
 }
 
-function toggleDateInput() {
-      var checkbox = document.getElementById("never-expire-checkbox");
-      var dateInput = document.getElementById("due_date");
+// function toggleDateInput() {
+//       var checkbox = document.getElementById("never-expire-checkbox");
+//       var dateInput = document.getElementById("due_date");
       
-      if (checkbox.checked) {
-          dateInput.disabled = true;
-          $('#due_date').val("");
-          $("#p_terms").val("recpt");
-      } 
-      else {
-          dateInput.disabled = false;
-      }
-  }
+//       if (checkbox.checked) {
+//           dateInput.disabled = true;
+//           $('#due_date').val("");
+//           $("#p_terms").val("recpt");
+//       } 
+//       else {
+//           dateInput.disabled = false;
+//       }
+//   }
 
-  $(document).ready(function() {
+//   $(document).ready(function() {
+//     $('#p_terms').change(function() {
+//       var va = $(this).val();
+//       var checkbox = $('#never-expire-checkbox')[0];
+//       if (va == 'recpt'){
+//         checkbox.checked = true;
+//         $('#due_date')[0].disabled = true;
+//       }
+//       else{
+//         checkbox.checked = false;
+//         $('#due_date').disabled = false;
+//       }
+//       });
+//   });
+function toggleDateInput() {
+    var checkbox = document.getElementById("never-expire-checkbox");
+    var billDateInput = document.getElementById("bill_date");
+    var dueDateInput = document.getElementById("due_date");
+
+    if (checkbox.checked) {
+        billDateInput.disabled = true; // Disable bill_date input
+        $('#due_date').val($('#bill_date').val()); // Set due_date value to bill_date value
+        $("#p_terms").val("recpt");
+    } else {
+        billDateInput.disabled = true; // Disable bill_date input
+    }
+}
+
+$(document).ready(function() {
     $('#p_terms').change(function() {
-      var va = $(this).val();
-      var checkbox = $('#never-expire-checkbox')[0];
-      if (va == 'recpt'){
-        checkbox.checked = true;
-        $('#due_date')[0].disabled = true;
-      }
-      else{
-        checkbox.checked = false;
-        $('#due_date').disabled = false;
-      }
-      });
-  });
+        var va = $(this).val();
+        var checkbox = $('#never-expire-checkbox');
+
+        if (va == 'recpt') {
+            checkbox.prop('checked', true); // Check the checkbox
+            $('#due_date').val($('#bill_date').val()); // Set due_date value to bill_date value
+            $('#due_date').prop('disabled', true); // Disable due_date input
+        } else {
+            checkbox.prop('checked', false); // Uncheck the checkbox
+            $('#due_date').prop('disabled', true); // Disable due_date input
+        }
+    });
+
+    toggleDateInput(); // Call toggleDateInput after the page loads to prevent dateInput from being enabled on page load
+});
+
+// Disable due_date input on page load
+$('#due_date').prop('disabled', true);
 
 </script>
 <script>
