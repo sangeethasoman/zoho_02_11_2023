@@ -173,6 +173,8 @@
     }
 
     function saveAsDraftDialog() {
+    document.getElementById("bill_date").disabled = false; 
+    document.getElementById("due_date").disabled = false;
     let grand_total = $('#grandtotal').val();
     let paid = $('#amtPaid').val(); 
     if(parseFloat(paid) > parseFloat(grand_total)){
@@ -184,7 +186,8 @@
     }
   }
 function saveAndOpenDialog() {
-
+  document.getElementById("bill_date").disabled = false; 
+document.getElementById("due_date").disabled = false;
 let grand_total = $('#grandtotal').val();
 let paid = $('#amtPaid').val(); 
 if(parseFloat(paid) > parseFloat(grand_total)){

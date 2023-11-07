@@ -15,8 +15,7 @@ from .forms import EmailForm
 from django.http import JsonResponse
 from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
-from django.template.loader import get_template
-from bs4 import BeautifulSoup
+from django.template.loader import get_template 
 import io
 import os
 import json
@@ -5517,7 +5516,8 @@ def create_recurring_bills(request):
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
         
-        if (src_supply.split("-")[1]) == company.state:
+        # if (src_supply.split("-")[1]) == company.state:
+        if(isGST(src_supply)):
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -5653,7 +5653,11 @@ def change_recurring_bills(request,id):
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
 
-        if (request.POST['srcofsupply'].split("-")[1]) == company.state:
+        # if (request.POST['srcofsupply'].split("-")[1]) == company.state:
+        #     tax = request.POST.getlist("tax1[]")
+        # else:
+        #     tax = request.POST.getlist("tax2[]")
+        if(isGST(request.POST['srcofsupply'])):
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -5727,7 +5731,7 @@ def view_recurring_bills(request,id):
     vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
     print(cust.state)
     print(company.state)
-    gst_or_igst = "GST" if company.state.lower() == cust.state.lower() else "IGST"
+    gst_or_igst = "GST" if isGST(cust.state) else "IGST"
     tax_total = [] 
     for b in billitem:
         if b.tax not in tax_total: 
@@ -6190,7 +6194,7 @@ def get_rate(request):
 
         item = AddItem.objects.get( id = id, user = user)
          
-        rate = 0 if item.s_price == "" else item.s_price
+        rate = 0 if item.p_price == "" else item.p_price
         hsn = 0 if item.hsn == "" else item.hsn
 
         return JsonResponse({"rate": rate,"hsn":hsn},safe=False)
@@ -6459,7 +6463,7 @@ def recurbills_customer(request):
         dpt = request.POST.get('dpt')
         
         gsttype=request.POST.get('gsttype')
-        gst_num = request.POST.get('gst_num')
+        gst_num = request.POST.get('gstin')
         pan_number = request.POST.get('pan_number')
         # gstin=request.POST.get('gstin')
         # panno=request.POST.get('panno')
@@ -6476,14 +6480,14 @@ def recurbills_customer(request):
         country=request.POST.get('country')
         fax=request.POST.get('fax')
         phone=request.POST.get('phone')
-        # shipstreet1=request.POST.get('shipstreet1')
-        # shipstreet2=request.POST.get('shipstreet2')
-        # shipcity=request.POST.get('shipcity')
-        # shipstate=request.POST.get('shipstate')
-        # shippincode=request.POST.get('shippincode')
-        # shipcountry=request.POST.get('shipcountry')
-        # shipfax=request.POST.get('shipfax')
-        # shipphone=request.POST.get('shipphone')
+        shipstreet1=request.POST.get('shipstreet1')
+        shipstreet2=request.POST.get('shipstreet2')
+        shipcity=request.POST.get('shipcity')
+        shipstate=request.POST.get('shipstate')
+        shippincode=request.POST.get('shippincode')
+        shipcountry=request.POST.get('shipcountry')
+        shipfax=request.POST.get('shipfax')
+        shipphone=request.POST.get('shipphone')
 
         u = User.objects.get(id = request.user.id)
 
@@ -6491,7 +6495,7 @@ def recurbills_customer(request):
                         customerWorkPhone = w_mobile,customerMobile = p_mobile, customerEmail=email,skype = skype,Facebook = fb, 
                         Twitter = twitter,placeofsupply=supply,Taxpreference = tax,currency=currency, website=website, 
                         designation = desg, department = dpt,OpeningBalance=balance,Address1=street1,Address2=street2, city=city, 
-                        state=state, PaymentTerms=payment,zipcode=pincode,country=country,  fax = fax,  phone1 = phone,user = u)
+                        state=state, PaymentTerms=payment,zipcode=pincode,country=country,  fax = fax,  phone1 = phone,user = u,sAddress1 =shipstreet1,sAddress2 = shipstreet2,scity = shipcity,sstate = shipstate,szipcode = shippincode,scountry = shipcountry,sfax = shipfax,sphone1 = shipphone,)
         cust.save()
 
         return HttpResponse({"message": "success"})
@@ -10561,8 +10565,8 @@ def entr_custmr_for_bills(request):
         desg = request.POST.get('desg')
         dpt = request.POST.get('dpt')
         gsttype=request.POST.get('gsttype')
-        # gstin=request.POST.get('gstin')
-        # panno=request.POST.get('panno')
+        gstin=request.POST.get('gstin')
+        panno=request.POST.get('panno')
         supply=request.POST.get('placeofsupply')
         tax = request.POST.get('tax_preference')
         currency=request.POST.get('currency')
@@ -10591,7 +10595,7 @@ def entr_custmr_for_bills(request):
                         customerWorkPhone = w_mobile,customerMobile = p_mobile, customerEmail=email,skype = skype,Facebook = fb, 
                         Twitter = twitter,placeofsupply=supply,Taxpreference = tax,currency=currency, website=website, 
                         designation = desg, department = dpt,OpeningBalance=balance,Address1=street1,Address2=street2, city=city, 
-                        state=state, PaymentTerms=payment,zipcode=pincode,country=country,  fax = fax,  phone1 = phone,user = u)
+                        state=state, PaymentTerms=payment,zipcode=pincode,country=country,  fax = fax,  phone1 = phone,user = u, GSTIN=gstin,pan_no=panno)
         cust.save()
 
         response_data = {
@@ -10776,7 +10780,7 @@ def create_purchase_bill1(request):
         bill_number = request.POST['bill_number']
         order_number = request.POST['order_number']
         bill_date = request.POST['bill_date']
-        due_date = None if request.POST.get('due_date') == "" else  request.POST.get('due_date')
+        due_date = request.POST['due_date']
         terms = request.POST['p_terms']
         repeat_every = request.POST['repeats']
         payment_method = request.POST['paymentmethod']
@@ -10910,7 +10914,7 @@ def update_bills(request,pk):
         bill.bill_no = request.POST['bill_number']
         bill.order_number = request.POST['order_number']
         bill.bill_date = request.POST['bill_date']
-        bill.due_date = None if request.POST.get('due_date') == "" else  request.POST.get('due_date')
+        bill.due_date = request.POST['due_date']
         bill.payment_terms = request.POST['p_terms']
         bill.repeat_every = request.POST['repeats']
         bill.payment_method = request.POST['paymentmethod']
@@ -17712,7 +17716,7 @@ def draft_recurring_bills(request):
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
         
-        if (src_supply.split("-")[1]) == company.state:
+        if(isGST(src_supply)):
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -17788,7 +17792,8 @@ def change_draft_recurring_bills(request,id):
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
 
-        if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
+        #if (" ".join(request.POST['srcofsupply'].split(" ")[1:])) == company.state:
+        if(isGST(request.POST['srcofsupply'])):
             tax = request.POST.getlist("tax1[]")
         else:
             tax = request.POST.getlist("tax2[]")
@@ -19694,6 +19699,11 @@ def convert_challan_to_invoice(request, id):
     }
 
     return render(request, 'delivery_challan_overview.html', context)
+
+def isGST(state):
+    gst_state = ["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"] 
+    return gst_state.__contains__(state)
+    
 
 
 

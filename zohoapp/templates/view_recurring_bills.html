@@ -9,7 +9,12 @@
 </body>
 
 <style>
-   
+   .store-user {
+    background-color: #ffffcc; /* This sets the background color to a light yellow */
+    border: 1px solid #ffcc00; /* This sets a border with a yellow color */
+    padding: 10px; /* This adds some padding around the content */
+}
+
     .containerprof {
         min-height: 450px;
         background-size: contain;
@@ -452,8 +457,8 @@
                                     <p>Bill Date&nbsp;&nbsp;<span style="color: black;">: {{recur_bill.start_date|date:'d-m-Y'}}</span></p>
                                     <!-- <p>Due Date&nbsp;<span style="color: black;">: {{recur_bill.end_date|date:'d-m-Y'}}</span></p> -->
                                     <p>Due Date&nbsp;<span style="color: black;">: {% if recur_bill.end_date == null %} Due on receipt {% else %}   {{recur_bill.end_date|date:'d-m-Y'}} {% endif %}</span></p>
-                                    <!-- <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">: NET {{recur_bill.payment_terms}}</span></p>  -->
-                                    <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">:  {% if recur_bill.end_date == null %} Due on receipt {% else %}   NET {{ recur_bill.payment_terms }} {% endif %}</span></p> 
+                                    <!-- <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">: NET {{recur_bill.payment_terms}}</span></p>  --> 
+                                    <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">:  {% if recur_bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ recur_bill.payment_terms }} {% endif %}</span></p> 
                                 </div>
                             </div>
                         </section>
@@ -500,7 +505,7 @@
                     </div>
                 </section>
 
-                <section class="product-area mt-0">
+                <section class="product-area mt-2">
                     <table class="table ">
                         <thead style="background-color:burlywood; color: black;">
                             <tr>
@@ -688,7 +693,7 @@
                                 </div>
                                 <div class="col-md-6 mt-3">
                                     <!-- <p class="mb-0" style="font-size: 18px; color: #434141;"> NET {{ recur_bill.payment_terms }}</p> -->
-                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> {% if recur_bill.end_date == null %} Due on receipt {% else %}   NET {{ recur_bill.payment_terms }} {% endif %}</p>
+                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> {% if recur_bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ recur_bill.payment_terms }} {% endif %}</p>
                                 </div>
                             </div>
 

@@ -1498,7 +1498,7 @@
                     <label id="glbl" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark" id="c_gstin" name="c_gstin" placeholder="29APPCK7465F1Z1">
+                    <input type="text" class="form-control text-dark" id="c_gstin" name="gst_num" placeholder="29APPCK7465F1Z1">
                     <label id="c_gst_label" style="display: none;"></label>
                   </div>       
                 </div>
@@ -1507,7 +1507,7 @@
                     <label for="c_pan">PAN Number</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control text-dark" id="c_pan" name="c_pan" placeholder="APPCK7465F">
+                    <input type="text" class="form-control text-dark" id="c_pan" name="pan_number" placeholder="APPCK7465F">
                     <label id="pan_label" style="display: none;"></label>
                   </div>       
                 </div>
@@ -2364,7 +2364,7 @@ $(document).ready(function() {
                 $("#vsrcofsupply").val(data.source_supply.replace('-',' ')).attr("selected","selected"); 
               if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
                 $("#gstin_row").removeClass('d-none');
-                $("#gstin_row").addClass('d-flex');
+                $("#gstin_row").addClass('d-flex'); 
                 $('#gstin_inp').val(data.gst_number);
 
               }
@@ -2379,8 +2379,15 @@ $(document).ready(function() {
                 $('#gstin_inp').val(data.gst_number);
               }
               
+              if(data.gst_number != null && data.gst_number != ""){
+                $("#gstin_row").removeClass('d-none');
+                $("#gstin_row").addClass('d-flex');
+              }
               else{
+                
+                $("#gstin_row").removeClass('d-flex');
                 $("#gstin_row").addClass('d-none');
+
               }
                 
 
@@ -4008,20 +4015,30 @@ $(document).on('change','.disc',function(){ debugger
 
     $(document).on("change","#addcharge",function(){ debugger
 
-      var sta = $("#srcofsupply").val().split('-')[1]
-      if(sta == $("#company_state").val()){
-        var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+      //var sta = $("#srcofsupply").val().split('-')[1]
+      // if(sta == $("#company_state").val()){
+      //   var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+      //   $("#grandtotal").val(total);
+      // }
+      // else if(sta != $("#company_state").val()){
+      //   var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
+      //   $("#grandtotal").val(total);
+      // }
+      // else{
+      //   var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
+      //   $("#grandtotal").val(total);
+      // }
+      var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
+     
+      if(isGST()){
+        total = parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
         $("#grandtotal").val(total);
-      }
-      else if(sta != $("#company_state").val()){
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
+
       }
       else{
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
+        total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
       }
-
+      $("#grandtotal").val(total);
     });
 
     $(document).on("change", "#add_round_off", function(){
@@ -4078,6 +4095,7 @@ $(document).on('change','.disc',function(){ debugger
   }
 
   function saveAsDraftDialog() { 
+    document.getElementById("date2").disabled = false; 
     let grand_total = $('#grandtotal').val();
     let paid = $('#amtPaid').val(); 
     if(parseFloat(paid) > parseFloat(grand_total)){
@@ -4089,8 +4107,8 @@ $(document).on('change','.disc',function(){ debugger
     }
   }
 
-  function saveAndOpenDialog() {
-
+  function saveAndOpenDialog() { 
+    document.getElementById("date2").disabled = false; 
     let grand_total = $('#grandtotal').val();
     let paid = $('#amtPaid').val(); 
     if(parseFloat(paid) > parseFloat(grand_total)){
