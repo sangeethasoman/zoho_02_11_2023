@@ -2455,7 +2455,8 @@ $(document).ready(function() {
                 // gst or igst in tax
 
               $("#cust_state").val(data.state);
-              
+              srcofsupply()
+              isGST()
             }
            
         });
@@ -4127,10 +4128,34 @@ $(document).on('change','.disc',function(){ debugger
      var gst_state =["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"];  
      let customer_st  =$("#srcofsupply").val();
      if(gst_state.indexOf(customer_st)>-1)
-      {
+      {   
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+        $(".tax1").removeClass('d-none');
+        $(".tax1").addClass('d-flex'); 
+
+        $("#cgst1").removeClass('d-none');
+        $("#cgst1").addClass('d-flex');
+        $("#sgst1").removeClass('d-none');
+        $("#sgst1").addClass('d-flex');
+
+        $("#igst1").removeClass('d-flex');
+        $("#igst1").addClass('d-none');
         return true;
       }
       else{
+        $(".tax2").removeClass('d-none');
+        $(".tax2").addClass('d-flex');
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none'); 
+
+        $("#igst1").removeClass('d-none');
+        $("#igst1").addClass('d-flex');
+
+        $("#cgst1").removeClass('d-flex');
+        $("#cgst1").addClass('d-none');
+        $("#sgst1").removeClass('d-flex');
+        $("#sgst1").addClass('d-none');
         return false;
       }
   }

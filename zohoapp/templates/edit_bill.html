@@ -113,10 +113,10 @@
         // var pos = document.getElementById("pos").value;
         // var sos = document.getElementById("sos").value;
 
-        var pos = document.getElementById("pos").value.split("-")[1];
-        var sos = document.getElementById("state").value;
+        // var pos = document.getElementById("pos").value.split("-")[1];
+        // var sos = document.getElementById("state").value;
 
-        if (pos == sos) {
+        if(isGST()){
             // console.log(pos);
             // console.log(state);
             // console.log(taxamount);
@@ -128,17 +128,19 @@
             $('#igst').val(parseFloat(d.toFixed(2)));
             document.getElementById("tr_cgst").style.display = "table-row";
             document.getElementById("tr_sgst").style.display = "table-row";
-
+            document.getElementById('tr_igst').style.display = "none";
 
         }
-
-        if (pos != sos) {
+         else
+          {
             // console.log(pos);
             // console.log(state);
             $('#igst').val(taxamount.toFixed(2));
             $('#cgst').val(d.toFixed(2));
             $('#sgst').val(d.toFixed(2));
             document.getElementById('tr_igst').style.display = "table-row";
+            document.getElementById("tr_cgst").style.display = "none";
+            document.getElementById("tr_sgst").style.display = "none";
         }
     }
     // Calculate total
@@ -449,10 +451,10 @@ else{
                         <td class='text-right'><input type='number' id='rate{{ forloop.counter }}' style="width: 80px;"
                                 class='bg-transparent border-0 text-black text-right rate' name='rate[]' value="{{item.rate}}">
                         </td>
-
+                        {{item.tax_percentage}}
                         <td class='text-right'> <select name='tax[]' id='tax{{ forloop.counter }}' style="width: 80px;"
                           class='bg-transparent border-0 text-black text-right tax'
-                          onclick='handleTaxChange({{ forloop.counter }})'>
+                          onclick='handleTaxChange({{ forloop.counter }})'> 
                           
                                 <option value="{{item.tax_percentage}}"  id="taxType" selected>{{item.tax_percentage}}%</option> 
                                 <optgroup label="GST" style="display: none;">
@@ -628,7 +630,7 @@ else{
               <span aria-hidden="true">&times;</span>
           </button>
       </div>
-      <div class="modal-body" style="background: rgb(32, 35, 37);height: 600px; overflow-y: scroll;">
+      <div class="modal-body" style="background: rgb(32, 35, 37);height: 500px; overflow-y: scroll;">
         <div class="card p-3 m-3">
           <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalCustomer">
     
@@ -774,7 +776,7 @@ else{
                 <label for="c_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
               </div>
               <div class="col-md-6 mt-2">
-                <select class="form-control text-dark bg-light" id="c_gsttype" name="c_gsttype" required>
+                <select class="form-control text-dark bg-light" id="c_gsttype2" name="c_gsttype" required>
                   <option value="value" selected>Select a Gst Treatment</option>
                   <option value="Registered Business-Regular Business that is registered under GST">Registered Business-Regular Business that is registered under GST</option>
                   <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">Registered Business-Composition Business that is registered under the Composition scheme in GST</option>
@@ -786,7 +788,7 @@ else{
               </div>       
             </div>
 
-           <div class="row gstrow d-none">
+            <div class="row c_gstrow d-none">
               <div class="col-md-3 mt-2">
                 <label id="glbl" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
               </div>
@@ -796,15 +798,15 @@ else{
               </div>       
             </div>
 
-           <!--- <div class="row">
+            <div class="row">
               <div class="col-md-3 mt-2">
                 <label for="v_pan">PAN Number</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control" id="v_pan" name="v_pan" placeholder="APPCK7465F">
+                <input type="text" class="form-control bg-white text-dark" id="c_pan2" name="v_pan" placeholder="APPCK7465F">
                 <label id="pan_label"></label>
               </div>       
-            </div> -->
+            </div>
 
             <div class="row mt-2">
               <div class="col-md-3 mt-2">
@@ -1214,7 +1216,7 @@ else{
               <span aria-hidden="true">&times;</span>
           </button>
       </div>
-      <div class="modal-body" style="background: rgb(32, 35, 37);height: 600px; overflow-y: scroll;">
+      <div class="modal-body" style="background: rgb(32, 35, 37);height: 500px; overflow-y: scroll;">
         <div class="card p-3 m-3">
           <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalVendor">
 
@@ -1324,7 +1326,7 @@ else{
                 <label for="v_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
               </div>
               <div class="col-md-6 mt-2">
-                <select class="form-control text-dark bg-light" id="v_gsttype" name="v_gsttype" required>
+                <select class="form-control text-dark bg-light" id="v_gsttype2" name="v_gsttype" required>
                   <option selected disabled value="">Choose..</option>
                   <option value="Registered Business - Regular">Registered Business - Regular <span><i>(Business that is registered under gst)</i></span></option>
                   <option value="Registered Business - Composition">Registered Business - Composition (Business that is registered under composition scheme in gst)</option>
@@ -1353,10 +1355,11 @@ else{
                 <label for="v_pan">PAN Number</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_pan" name="v_pan" placeholder="APPCK7465F">
+                <input type="text" class="form-control text-dark bg-light" id="v_pan2" name="v_pan" placeholder="APPCK7465F">
                 <label id="pan_label"></label>
               </div>       
             </div>
+
 
             <div class="row">
               <div class="col-md-3 mt-2">
@@ -2297,16 +2300,32 @@ select = $('#customer_sel').val();
 
               $("#cust_state").val(response.state);
    debugger 
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
-                     if (pos === sos) {
-                           $('#tax1 optgroup[label="GST"]').show();
-                           $('#tax1 optgroup[label="IGST"]').hide(); 
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
+
+                   
+
+                    if(isGST()){
+                      $('#item_table tbody tr').each(function (Value, index,){ 
+                        let ind = Value+1
+                           $('#tax'+ind+' optgroup[label="GST"]').show();
+                           $('#tax'+ind+' optgroup[label="IGST"]').hide();  
+                           a =  $('#tax'+ind+' #taxType').text()
+                           if(a.indexOf("GST") == -1){
+                           $('#tax'+ind+' #taxType').text(a +" GST");
+                           }
+                      });
+
                        } else {
-                           $('#tax1 optgroup[label="GST"]').hide();
-                           $('#tax1 optgroup[label="IGST"]').show();  
+                        $('#item_table tbody tr').each(function (Value, index,){
+                          let ind = Value+1
+                            $('#tax'+ind+' optgroup[label="GST"]').hide();
+                           $('#tax'+ind+' optgroup[label="IGST"]').show(); 
+                           a =  $('#tax'+ind+' #taxType').text()
+                           $('#tax'+ind+' #taxType').text(a +" IGST");
+                              }); 
                        }
-                      
+                       isGST();
                 }
 
             });
@@ -2315,9 +2334,9 @@ select = $('#customer_sel').val();
 });
 
 document.addEventListener("DOMContentLoaded", function() { debugger
-                        var pos = document.getElementById("pos").value.split("-")[1];
-                        var sos = document.getElementById("state").value;
-                        if (pos === sos) {
+                        // var pos = document.getElementById("pos").value.split("-")[1];
+                        // var sos = document.getElementById("state").value;
+                        if(isGST()){
                            $('#tax1 optgroup[label="GST"]').show();
                            $('#tax1 optgroup[label="IGST"]').hide(); 
                            a =  $("#taxType").text()
@@ -2382,7 +2401,7 @@ document.addEventListener("DOMContentLoaded", function() { debugger
                 // gst or igst in tax
 
               $("#cust_state").val(response.state);
-
+              isGST();
                 
                     
 
@@ -2446,9 +2465,17 @@ $(document).ready(function () {
                 $('#gstin_inp').val(' '+ response.gst_number)
               }
               
-              else{
-                $("#gstin_row").addClass('d-none');
+              if(response.gst_number != null && response.gst_number != ""){
+                $("#gstin_row").removeClass('d-none');
+                $("#gstin_row").addClass('d-flex');
               }
+              else{
+                
+                $("#gstin_row").removeClass('d-flex');
+                $("#gstin_row").addClass('d-none');
+
+              }
+
 
 
                 }
@@ -2506,9 +2533,17 @@ $(document).ready(function () {
                 $('#gstin_inp').val(' '+ response.gst_number)
               }
               
-              else{
-                $("#gstin_row").addClass('d-none');
+              if(response.gst_number != null && response.gst_number != ""){
+                $("#gstin_row").removeClass('d-none');
+                $("#gstin_row").addClass('d-flex');
               }
+              else{
+                
+                $("#gstin_row").removeClass('d-flex');
+                $("#gstin_row").addClass('d-none');
+
+              }
+
 
 
                 }
@@ -2770,9 +2805,9 @@ $(document).ready(function () {
         skype :$("#vskype").val(),
         desg :$("#v_desg").val(),
         dpt :$("#v_dpt").val(),
-        gsttype :$("#v_gsttype").val(),
+        gsttype :$("#v_gsttype2").val(),
         gstin :$("#v_gstin").val(),
-        panno : $("#v_pan").val(),
+        panno : $("#v_pan2").val(),
         sourceofsupply :$("#v_srcsupply").val(),
         currency : $("#v_curn").val(),
         openingbalance : $("#v_open").val(),
@@ -2849,7 +2884,9 @@ $.ajax({
       skype :$("#cskype").val(),
       desg :$("#c_desg").val(),
       dpt :$("#c_dpt").val(),
-      gsttype :$("#c_gsttype").val(),
+      gsttype :$("#c_gsttype2").val(),
+      gstin :$("#c_gstin").val(),
+      panno : $("#c_pan2").val(),
       placeofsupply :$("#placesupply").val(),
       tax_preference :cust_tax,
       currency : $("#c_curn").val(),
@@ -3501,11 +3538,11 @@ $.ajax({
                     document.getElementById('HSN1').value = response.hsn
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax1 optgroup[label="GST"]').show();
                            $('#tax1 optgroup[label="IGST"]').hide();
                        } else {
@@ -3538,11 +3575,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax2 optgroup[label="GST"]').show();
                            $('#tax2 optgroup[label="IGST"]').hide();
                        } else {
@@ -3575,11 +3612,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax3 optgroup[label="GST"]').show();
                            $('#tax3 optgroup[label="IGST"]').hide();
                        } else {
@@ -3612,11 +3649,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax4 optgroup[label="GST"]').show();
                            $('#tax4 optgroup[label="IGST"]').hide();
                        } else {
@@ -3649,11 +3686,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax5 optgroup[label="GST"]').show();
                            $('#tax5 optgroup[label="IGST"]').hide();
                        } else {
@@ -3686,11 +3723,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax6 optgroup[label="GST"]').show();
                            $('#tax6 optgroup[label="IGST"]').hide();
                        } else {
@@ -3723,11 +3760,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax7 optgroup[label="GST"]').show();
                            $('#tax7 optgroup[label="IGST"]').hide();
                        } else {
@@ -3760,11 +3797,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax8 optgroup[label="GST"]').show();
                            $('#tax8 optgroup[label="IGST"]').hide();
                        } else {
@@ -3797,11 +3834,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax9 optgroup[label="GST"]').show();
                            $('#tax9 optgroup[label="IGST"]').hide();
                        } else {
@@ -3834,11 +3871,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax10 optgroup[label="GST"]').show();
                            $('#tax10 optgroup[label="IGST"]').hide();
                        } else {
@@ -3874,11 +3911,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax11 optgroup[label="GST"]').show();
                            $('#tax11 optgroup[label="IGST"]').hide();
                        } else {
@@ -3914,11 +3951,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax12 optgroup[label="GST"]').show();
                            $('#tax12 optgroup[label="IGST"]').hide();
                        } else {
@@ -3954,11 +3991,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax13 optgroup[label="GST"]').show();
                            $('#tax13 optgroup[label="IGST"]').hide();
                        } else {
@@ -3994,11 +4031,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax14 optgroup[label="GST"]').show();
                            $('#tax14 optgroup[label="IGST"]').hide();
                        } else {
@@ -4034,11 +4071,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax15 optgroup[label="GST"]').show();
                            $('#tax15 optgroup[label="IGST"]').hide();
                        } else {
@@ -4074,11 +4111,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax16 optgroup[label="GST"]').show();
                            $('#tax16 optgroup[label="IGST"]').hide();
                        } else {
@@ -4114,11 +4151,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax17 optgroup[label="GST"]').show();
                            $('#tax17 optgroup[label="IGST"]').hide();
                        } else {
@@ -4154,11 +4191,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax18 optgroup[label="GST"]').show();
                            $('#tax18 optgroup[label="IGST"]').hide();
                        } else {
@@ -4194,11 +4231,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax19 optgroup[label="GST"]').show();
                            $('#tax19 optgroup[label="IGST"]').hide();
                        } else {
@@ -4234,11 +4271,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax20 optgroup[label="GST"]').show();
                            $('#tax20 optgroup[label="IGST"]').hide();
                        } else {
@@ -4274,11 +4311,11 @@ $.ajax({
 
                     // var pos = document.getElementById("pos").value;
                     // var sos = document.getElementById("sos").value;
-                    var pos = document.getElementById("pos").value.split("-")[1];
-                    var sos = document.getElementById("state").value;
+                    // var pos = document.getElementById("pos").value.split("-")[1];
+                    // var sos = document.getElementById("state").value;
 
                     $(document).ready(function() {
-                       if (pos === sos) {
+                      if(isGST()){
                            $('#tax21 optgroup[label="GST"]').show();
                            $('#tax21 optgroup[label="IGST"]').hide();
                        } else {
@@ -4346,11 +4383,11 @@ $.ajax({
  function handleTaxChange(selectId) {
         // var pos = $("#pos").val();
         // var sos = $("#sos").val();
-        var pos = $("#pos").val().value.split("-")[1];
-        var sos = $("#state").val();
+        // var pos = $("#pos").val().value.split("-")[1];
+        // var sos = $("#state").val();
          
         
-        if (pos === sos) {
+        if(isGST()){
             $(`#tax${selectId} optgroup[label="GST"]`).show();
             $(`#tax${selectId} optgroup[label="IGST"]`).hide();
         } else {
@@ -4362,6 +4399,45 @@ $.ajax({
 </script>
 
 <script>
+  $(document).ready(function() {
+    $("#c_gsttype2").change(function() {
+      var x=$('#c_gsttype2').val();
+      if(x=="Unregistered Business") 
+      {
+        $(".c_gstrow").addClass('d-none');
+
+      }
+      else if(x == 'Overseas'){
+        $(".c_gstrow").addClass('d-none');
+      }
+      else 
+      {
+        $(".c_gstrow").removeClass('d-none');
+        $(".c_gstrow").addClass('d-flex');
+      }
+    
+    });
+  });
+  $(document).ready(function() {
+  $('#v_gsttype2').on('change', function(){ debugger 
+        var selectedValue = $(this).val(); 
+        var x=$(this).val();
+        if(x=="unregistered Business") 
+        {
+          $(".gstrow").addClass('d-none');
+
+        }
+        else if(x == 'Overseas'){
+          $(".gstrow").addClass('d-none');
+        }
+        else 
+        {
+          $(".gstrow").removeClass('d-none');
+          $(".gstrow").addClass('d-flex');
+      }
+    });
+
+  });
   $(document).ready(function() {
     $("#v_gsttype").change(function() {
       var x=$('#v_gsttype').val();
@@ -4617,5 +4693,77 @@ $('#due_date').prop('disabled', true);
     });
   });
 });
+
+$(document).ready(function() {
+    $("#v_gstin").change(function() {
+
+        var x=$("v_gstin").val();
+        var gst_label=document.getElementById("gst_label")
+        var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+        if (!expr.test(x)) {
+            gst_label.style.color="red";
+            gst_label.innerHTML = "Invalid GST Number.";
+        }
+        else{
+            gst_label.style.color="green";
+            gst_label.innerHTML = "valid GST Number.";
+
+        }
+      });
+    });
+
+    $(document).ready(function() {
+      $("#v_pan2").change(function() {
+        var x= $("#v_pan2").val();
+        var pan_label=document.getElementById("pan_label")
+        var expr=    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+        if (!expr.test(x)) {
+            pan_label.style.color="red";
+            pan_label.innerHTML = "Invalid PAN Number.";
+        }
+        else{
+            pan_label.style.color="green";
+            pan_label.innerHTML = "valid PAN Number.";
+
+        }
+      });
+    });
+
+    $(document).ready(function() {
+      $("#c_pan2").change(function() {
+        var x= $("#c_pan2").val();
+        var pan_label=document.getElementById("pan_label")
+        var expr=    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+        if (!expr.test(x)) {
+            pan_label.style.color="red";
+            pan_label.innerHTML = "Invalid PAN Number.";
+        }
+        else{
+            pan_label.style.color="green";
+            pan_label.innerHTML = "valid PAN Number.";
+
+        }
+      });
+    });
+  </script>
+  <script>
+     function isGST()
+  { 
+     var gst_state =["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"];  
+     let customer_st  =$("#pos").val();
+     if(gst_state.indexOf(customer_st)>-1)
+      {     
+        document.getElementById("tr_cgst").style.display = "table-row";
+        document.getElementById("tr_sgst").style.display = "table-row";
+        document.getElementById('tr_igst').style.display = "none";
+        return true;
+      }
+      else{
+        document.getElementById('tr_igst').style.display = "table-row";
+        document.getElementById("tr_cgst").style.display = "none";
+        document.getElementById("tr_sgst").style.display = "none";
+        return false;
+      }
+  }
   </script>
 {% endblock %}

@@ -13,6 +13,10 @@
     integrity="sha384-**YOUR-INTEGRITY-VALUE**" crossorigin="anonymous">
 
 <style>
+    .row.highlight {
+    background-color: rgb(217, 217, 193);
+}
+
     /* width */
     ::-webkit-scrollbar {
         width: 10px;
@@ -183,7 +187,7 @@
                         <option value="3">Vendor A-Z</option>
                 </select>
             </div> -->
-            <div class="col-md-4 py-3 d-flex align-items-center">
+            <div class="col-md-4 d-flex align-items-center">
                 <input type="text" class="form-control text-dark bg-white" id="search" placeholder="search..." style="width: 150px;">&nbsp;
                 
                 <a class="btn text-center px-4 pt-2 btn-outline-warning" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -321,7 +325,7 @@
             </div>
         </div>
 
-        <div class="my-4  " style="background-color: rgba(252, 236, 217, 0.8); ">
+        <div class="my-4  " style="background-color: rgba(252, 236, 217, 0.8); width: 110%;">
             
             <div class="row my-3">
                 <div class="col-lg-12">
@@ -351,11 +355,11 @@
                                                 <h6 class="p-2" for="">: {{ bill.customer_email }}</h6>
                                                 <h6 class="p-2" for="">: {{ bill.bill_date }}</h6>
                                                 <!-- <h6 class="p-2" for="">: {{ bill.due_date }}</h6> -->
-                                                <h6 class="p-2" for="">: {% if bill.due_date == null %} Due on receipt {% else %}   {{bill.due_date|date:'d-m-Y'}} {% endif %}</h6>
+                                                <h6 class="p-2" for="">: {{bill.due_date}}</h6>
                                                 <h6 class="p-2" for="">: {{ bill.payment_method }}</h6><br>
                                                 <h6 class="p-2" for="">: {{ bill.repeat_every }}</h6><br>
                                                 <!-- <h6 class="p-2" for="">: NET {{ bill.payment_terms }}</h6><br> -->
-                                                <h6 class="p-2" for="">: {% if bill.due_date == null %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6><br>
+                                                <h6 class="p-2" for="">: {% if bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6><br>
                                                 <h6 class="p-2" for="">: {{ bill.total }}</h6>
 
                                             </div>
@@ -464,52 +468,54 @@
                             <div class="slip m-3 p-5  bg-light" id="whatToPrint" 
                                 style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
                                 <div class="ribbon">{{ bill.status }}</div>
-                                <div class="row ">
-                                    <div class="col-md-6 ">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        
+                                        <h4 class="text-dark" style="font-size: 2.5rem ;text-align: right;">BILL</h4>
                                         <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
                                         <h6 class="text-dark">{{ company.address }}</h6>
                                         <h6 class="text-dark">{{ company.city }},{{ company.state }}</h6>
                                     </div>
-                                    <div class="col-md-6 " style="text-align: right;">
+                                </div>
+                                <div class="row ">
+                                   
+                                    <div class="col-md-12 " style="text-align: right;">
                                         <div class="row">
-                                            <div class="col-md-3">
-                                        <br><br>
+                                            <div class="col-md-6"> 
                                         <h6 class="text-dark pt-2"style="text-align: left;">BILL Number</h6>
                                         <h6 class="text-dark "style="text-align: left;">Order Date</h6>
                                         <h6 class="text-dark "style="text-align: left;">Expiry Date</h6>
-                                        <h6 class="text-dark "style="text-align: left;">Payment Method</h6>
                                         <h6 class="text-dark "style="text-align: left;">Payment Terms</h6>
                                         <h6 class="text-dark "style="text-align: left;">Repeat Every</h6>
+                                        <h6 class="text-dark "style="text-align: left;">Payment Method</h6>
                                         </div>
-                                        <div class="col-md-9">
-                                            <h1 class="text-dark" style="font-size: 2.5rem;">BILL</h1>
-                                            <h6 class="text-dark "style="text-align: left;">:{{bill.bill_no }}</h6><br>
-                                            <h6 class="text-dark "style="text-align: left;">:{{ bill.bill_date|date:'d/m/Y' }}</h6><br>
-                                            <!-- <h6 class="text-dark "style="text-align: left;">:{{ bill.due_date|date:'d/m/Y' }}</h6> -->
-                                            <h6 class="text-dark "style="text-align: left;">:{% if bill.due_date == null %} Due on receipt {% else %}   {{bill.due_date|date:'d/m/Y'}} {% endif %}</h6><br>
+                                        <div class="col-md-6">
+                                            <h6 class="text-dark "style="text-align: left;">:{{ bill.bill_no }}</h6>
+                                            <h6 class="text-dark "style="text-align: left;">:{{ bill.bill_date|date:'d/m/Y' }}</h6>
+                                            <h6 class="text-dark "style="text-align: left;">:{{bill.due_date|date:'d/m/Y'}}</h6>
+                                            <h6 class="text-dark "style="text-align: left;">: {% if bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6>
+                                            <h6 class="text-dark  "style="text-align: left;">: {{ bill.repeat_every }}</h6>
                                             <h6 class="text-dark "style="text-align: left;">: {{ bill.payment_method }}</h6>
-                                            <h6 class="text-dark pt-2 "style="text-align: left;">: {% if bill.due_date == null %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6>
-                                            <h6 class="text-dark pt-2 "style="text-align: left;">: {{ bill.repeat_every }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                     
                                 </div>
                                 <hr>
-                                <div class="row ">
+                                <div class=" row highlight ">
+                                <div class="row" >
                                     <div class="col-md-9 mt-auto">
                                         <h6 class="text-dark">Bill To:</h6>
                                         <h6 class="text-dark">{{ bill.vendor_name }}</h6>
                                         <h6 class="text-dark">{{ bill.vendor_email }}</h6>
                                     </div>
-                                    <div class="col-md-3  mt-auto" style="text-align: left;">
+                                    <div class="col-md-3 mt-auto" style="text-align: left;">
                                         <h6 class="text-dark">Deliver To:</h6>
                                         <h6 class="text-dark ">{{ bill.customer_name }}</h6>
                                         <h6 class="text-dark">{{ bill.customer_email }}</h6>
-                                       
-                                        
                                     </div>
                                 </div>
+                            </div>
                                 <table class="table mt-2" style="border-color: black;">
                                     <thead class="bg-secondary text-white">
                                         <tr>

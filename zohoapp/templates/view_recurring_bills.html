@@ -456,7 +456,7 @@
                                     <p>Bill No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">: {{recur_bill.bill_no}}</span></p>
                                     <p>Bill Date&nbsp;&nbsp;<span style="color: black;">: {{recur_bill.start_date|date:'d-m-Y'}}</span></p>
                                     <!-- <p>Due Date&nbsp;<span style="color: black;">: {{recur_bill.end_date|date:'d-m-Y'}}</span></p> -->
-                                    <p>Due Date&nbsp;<span style="color: black;">: {% if recur_bill.end_date == null %} Due on receipt {% else %}   {{recur_bill.end_date|date:'d-m-Y'}} {% endif %}</span></p>
+                                    <p>Due Date&nbsp;<span style="color: black;">: {{recur_bill.end_date|date:'d-m-Y'}}</span></p>
                                     <!-- <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">: NET {{recur_bill.payment_terms}}</span></p>  --> 
                                     <p>Term&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: black;">:  {% if recur_bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ recur_bill.payment_terms }} {% endif %}</span></p> 
                                 </div>
@@ -682,7 +682,7 @@
                                 </div>
                                 <div class="col-md-6 mt-3">
                                     <!-- <p class="mb-0" style="font-size: 18px; color: #434141;">{{ recur_bill.end_date |date:'d-m-Y' }}</p> -->
-                                    <p class="mb-0" style="font-size: 18px; color: #434141;">{% if recur_bill.end_date == null %} Due on receipt {% else %}   {{recur_bill.end_date|date:'d-m-Y'}} {% endif %}</p>
+                                    <p class="mb-0" style="font-size: 18px; color: #434141;">{{recur_bill.end_date|date:'d-m-Y'}}</p>
                                     
                                 </div>
                             </div>

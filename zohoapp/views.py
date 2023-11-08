@@ -10704,8 +10704,6 @@ def create_purchase_bill(request):
         vendor_gst = request.POST['gstin_inp']
         sos = request.POST['sos']
         cust_name = request.POST['customer_name']
-        cus=customer.objects.get(customerName=cust_name)   
-        custo=cus.id 
         cust_email = request.POST['customer_email']
         pos = request.POST['pos']
         bill_number = request.POST['bill_number']
@@ -10715,26 +10713,18 @@ def create_purchase_bill(request):
         terms = request.POST['p_terms']
         repeat_every = request.POST['repeats']
         payment_method = request.POST['paymentmethod']
-        amt_paid = request.POST['amtPaid']
         adjustment = request.POST['add_round_off']
-        
-       
+        amt_paid = request.POST['amtPaid']
         
 
         item = request.POST.getlist('item[]')
-        account = request.POST.getlist('account[]')
+        # account = request.POST.getlist('account[]')
         quantity = request.POST.getlist('quantity[]')
         rate = request.POST.getlist('rate[]')
         tax = request.POST.getlist('tax[]')
         amount = request.POST.getlist('amount[]')
         hsn = request.POST.getlist('HSN[]')
         discount = request.POST.getlist('discount[]')
-        # print(item)
-        # print(quantity)
-        # print(rate)
-        # print(discount)
-        # print(tax)
-        # print(amount)
 
         # cust_note = request.POST['customer_note']
         sub_total = request.POST['subtotal']
@@ -10743,28 +10733,28 @@ def create_purchase_bill(request):
         cgst = request.POST['cgst']
         tax_amnt = request.POST['total_taxamount']
         shipping = request.POST['shipping_charge']
-        
+       
         total = request.POST['total']
         # tearms_conditions = request.POST['tearms_conditions']
         attachment = request.FILES.get('file')
         status = 'Draft'
-        terms = request.POST['p_terms']
         balance = float(total) - float(amt_paid)
-        bill = PurchaseBills(user=user,cusname_id=custo, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
-                             vendor_email=vendor_email,vendor_gst_no = vendor_gst,source_of_supply=sos,bill_no=bill_number, order_number=order_number, bill_date=bill_date, 
+       
+        bill = PurchaseBills(user=user, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
+                             vendor_email=vendor_email,vendor_gst_no=vendor_gst,source_of_supply=sos,bill_no=bill_number, order_number=order_number, bill_date=bill_date, 
                              due_date=due_date,payment_terms=terms, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, 
                              shipping_charge=shipping,total=total, status=status,attachment=attachment,repeat_every=repeat_every,
-                             payment_method=payment_method,amt_paid=amt_paid,balance=balance, adjustment= adjustment)
+                             payment_method=payment_method,amt_paid=amt_paid,balance=balance,adjustment=adjustment)
         bill.save()
-        
-        if len(item) == len(quantity) == len(rate) == len(account) == len(tax) == len(amount) == len(hsn) == len(discount):
-            mapped = zip(item, quantity, rate, account, tax, amount, hsn, discount)
+       
+
+        if len(item) == len(quantity) == len(rate) == len(tax) == len(amount) == len(hsn) == len(discount):
+            mapped = zip(item, quantity, rate,tax, amount, hsn, discount)
             mapped = list(mapped)
             for element in mapped:
                 created = PurchaseBillItems.objects.create(
-                    purchase_bill=bill, item_name=element[0], quantity=element[1], rate=element[2], account=element[3], tax_percentage=element[4], amount=element[5], hsn=element[6], discount=element[7])
+                    purchase_bill=bill, item_name=element[0], quantity=element[1], rate=element[2], tax_percentage=element[3], amount=element[4], hsn=element[5], discount=element[6])
     return redirect('view_bills')
-
 
 def create_purchase_bill1(request):
     cur_user = request.user

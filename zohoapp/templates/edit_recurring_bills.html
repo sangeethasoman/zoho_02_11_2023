@@ -366,8 +366,7 @@
               </tr>
             </thead>
             <tbody id="items-table-body">
-              {% for ri in recur_items %}
-              {{forloop.counter|add:"-1"}}
+              {% for ri in recur_items %} 
               <tr id='addr{{forloop.counter|add:"-1"}}' class="addr">
                 <td style="width: 20%;">
                   <div class="d-flex" >
@@ -2414,6 +2413,7 @@ $.ajax({
 
       $("#cust_state").val(data.state);
       srcofsupply()
+      isGST()
     }
     
 });
@@ -2423,9 +2423,9 @@ $.ajax({
 function srcofsupply(){ debugger
       $(".selecttax").removeClass('d-flex');
       $(".selecttax").addClass('d-none');
-      var custsrcofsupply = $("#srcofsupply").val().split('-')[1];  
-      if(custsrcofsupply == $("#company_state").val())
-      {
+      // var custsrcofsupply = $("#srcofsupply").val().split('-')[1];  
+      // if(custsrcofsupply == $("#company_state").val())
+      if(isGST()){
         $(".tax2").removeClass('d-flex');
         $(".tax2").addClass('d-none');
         $(".tax1").removeClass('d-none');
@@ -2654,7 +2654,7 @@ debugger
                 // gst or igst in tax
 
               $("#cust_state").val(data.state);
-              
+              isGST()
             }
             
         });
@@ -4001,23 +4001,38 @@ for(i = 0;i<row_count2 ; i++){
 }
 });
 
+$(document).on("change","#addcharge",function(){ debugger
 
-    $(document).on("change","#addcharge",function(){
-      var sta = $("#srcofsupply").val().split('-')[1]
-      if(sta == $("#company_state").val()){
-        var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
-      else if($("#srcofsupply").val() != $("#company_state").val()){
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
-      else{
-        var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
-        $("#grandtotal").val(total);
-      }
 
-    });
+var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
+
+if(isGST()){
+  total = parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+  $("#grandtotal").val(total);
+
+}
+else{
+  total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
+}
+$("#grandtotal").val(total);
+});
+
+    // $(document).on("change","#addcharge",function(){
+    //   var sta = $("#srcofsupply").val().split('-')[1]
+    //   if(sta == $("#company_state").val()){
+    //     var total =parseFloat( $("#subtotal").val())+ parseFloat( $("#sgst").val())+ parseFloat($("#cgst").val())+ parseFloat($("#addcharge").val());
+    //     $("#grandtotal").val(total);
+    //   }
+    //   else if($("#srcofsupply").val() != $("#company_state").val()){
+    //     var total = parseFloat($("#subtotal").val())+  parseFloat($("#igst").val())+ parseFloat($("#addcharge").val());
+    //     $("#grandtotal").val(total);
+    //   }
+    //   else{
+    //     var total = parseFloat($("#subtotal").val())+  parseFloat($("#addcharge").val());
+    //     $("#grandtotal").val(total);
+    //   }
+
+    // });
 
     $(document).on("change", "#add_round_off", function(){
       var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
@@ -4219,4 +4234,43 @@ else{
    });
  });
 </script>  
+<script>
+  function isGST()
+  {
+     var gst_state =["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"];  
+     let customer_st  =$("#srcofsupply").val();
+     if(gst_state.indexOf(customer_st)>-1)
+      {
+        $(".tax2").removeClass('d-flex');
+        $(".tax2").addClass('d-none');
+        $(".tax1").removeClass('d-none');
+        $(".tax1").addClass('d-flex'); 
+
+        $("#cgst1").removeClass('d-none');
+        $("#cgst1").addClass('d-flex');
+        $("#sgst1").removeClass('d-none');
+        $("#sgst1").addClass('d-flex');
+
+        $("#igst1").removeClass('d-flex');
+        $("#igst1").addClass('d-none');
+        return true;
+      }
+      else{
+
+        $(".tax2").removeClass('d-none');
+        $(".tax2").addClass('d-flex');
+        $(".tax1").removeClass('d-flex');
+        $(".tax1").addClass('d-none'); 
+
+        $("#igst1").removeClass('d-none');
+        $("#igst1").addClass('d-flex');
+
+        $("#cgst1").removeClass('d-flex');
+        $("#cgst1").addClass('d-none');
+        $("#sgst1").removeClass('d-flex');
+        $("#sgst1").addClass('d-none');
+        return false;
+      }
+  }
+</script>
 {% endblock %}
