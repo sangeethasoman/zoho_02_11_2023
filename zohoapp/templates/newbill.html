@@ -233,7 +233,7 @@ debugger
             <div class="row mb-4   pt-5">
                 <div class="col-sm-2"><label for="bill_number">Bill#*</label></div>
                 <div class="col-sm-4"><input type="text" id="bill_number" name="bill_number"
-                        class="form-control bg-white text-dark" value="Bill-00{{b_no}}">
+                        class="form-control bg-white text-dark" value="Bill-00{{b_no}}" style="width: 132%;">
 
                 </div>
             </div>
@@ -241,35 +241,35 @@ debugger
               
               <div class="row mb-4">
                 <div class="col-sm-2"><label for="repeats">Repeat Every *</label></div>
-                <div class="col-sm-4"><select class="form-control bg-white text-dark" id="repeats"  name="repeats"  class="form-control bg-white text-dark" style="width: 105%;"> </select></div>
-                <div class="col-sm-2">
-                
+                <div class="col-sm-4"><select class="form-control bg-white text-dark" id="repeats"  name="repeats"  class="form-control bg-white text-dark" style="width: 137%;"> </select></div>
+                <div class="col-sm-5" class="btn p-2" style="text-align: right; padding-right: 27%;" >
                   <a data-toggle="modal" data-target="#newrepeat">
                     <i class="fas fa-plus p-2 rounded " style="color: white; background-color: rgb(210, 132, 30); "
                         data-toggle="tooltip" title="Add Repeat"></i>
                 </a>
+                </div>
               </div>
             </div>
              
               
-            </div>
+            
             
             <div class="row mb-4">
                 <div class="col-sm-2"><label for="reference">Order Number</label></div>
                 <div class="col-sm-4"> <input type="number" id="order_number" name="order_number"
-                        class="form-control bg-white text-dark"></div>
+                        class="form-control bg-white text-dark" style="width: 132%;"></div>
             </div>
             <div class="row mb-4">
                 <div class="col-sm-2"><label for="reference">Bill Date*</label></div>
                 <div class="col-sm-4"> <input type="date" id="bill_date" name="bill_date"
-                        class="form-control bg-white text-dark"></div>
+                        class="form-control bg-white text-dark" style="width: 132%;"></div>
             </div>
             <div class="row ">
-                <div class="col-sm-2"><label for="reference">Due Date*</label></div>
+                <div class="col-sm-2"><label for="reference" >Due Date*</label></div>
                 <div class="col-sm-4"> <input type="date" id="due_date" name="due_date"
-                        class="form-control bg-white text-dark">
+                        class="form-control bg-white text-dark" style="width: 132%;">
                 </div>
-                <div class="col-md-3">
+                <div class="col-sm-5 m-2" style="text-align: right; padding-right: 17%;" >
                   <input type="checkbox" id="never-expire-checkbox" onchange="toggleDateInput()" />
                   <label for="never-expire-checkbox" style="color: #909091;" name="neverExp">Never Expires</label>
                 </div>
@@ -277,9 +277,9 @@ debugger
             </div>
             <div class="row pt-4">
               <div class="col-sm-2"><label class="text-right">Payment Terms</label></div>
-              <div class="col-sm-5 d-flex align-items-center"> 
+              <div class="col-sm-5 d-flex align-items-center"  style="width: 49%;"> 
                   <select id="p_terms" name="p_terms"
-                  class="form-control bg-white text-dark" style="width: 78%;">
+                  class="form-control bg-white text-dark">
                       
                       <option id="crt_term" selected></option>
                      
@@ -2966,10 +2966,35 @@ $.ajax({
           document.getElementById('customer_email').value = email
           document.getElementById('pos').value = plos
           document.getElementById("modalCustomer").reset();
-      // reloadCustomer();
+          reloadCustomer();
     },
 });        
 });
+
+function reloadCustomer() {
+
+$.ajax({ 
+  url: "{% url 'customer_dropdown' %}",
+  type: "GET",
+  dataType: "json",
+  data: $(this).serialize(),
+  csrfmiddlewaretoken: '{{ csrf_token }}',
+
+  success: function(data) { debugger
+    var dropdown = $('#customer_sel');
+    dropdown.empty();
+    dropdown.append($('<option></option>').text('Select Customer')); // Add default option
+
+    $.each(data, function(index, cust) {
+      dropdown.append($('<option></option>').attr('value', cust.customerName).data('pos', cust.customerName).text(cust.customerName));
+    });
+
+  },
+  error: function(xhr, status, error) {
+  console.error(xhr.responseText);
+  }
+});
+}
 
 </script>
 
@@ -4765,6 +4790,14 @@ $('#due_date').prop('disabled', true);
         return false;
       }
   }
+</script>
+
+<script>
+     $(document).ready(function () { 
+
+reloadCustomer();
+
+      })
 </script>
 
 {% endblock %}

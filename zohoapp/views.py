@@ -19694,9 +19694,17 @@ def isGST(state):
     gst_state = ["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"] 
     return gst_state.__contains__(state)
     
-
-
-
+@login_required(login_url='login')
+def pur_rec_customer_dropdown(request):
+    user = User.objects.get(id=request.user.id)
+    option_objects = customer.objects.filter(user_id=user.id)
+    return JsonResponse(option_objects)
+ 
+@login_required(login_url='login')
+def  pur_rec_vendor_dropdown(request):
+    user = User.objects.get(id=request.user.id)
+    option_objects = vendor_table.objects.filter(user_id=user.id)
+    return JsonResponse(options)
 
 
 

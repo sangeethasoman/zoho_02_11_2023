@@ -332,11 +332,11 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="overview text-dark">
                                         <h2 class="text-dark p-2" style="text-transform: uppercase;">{{ company.company_name }}</h2>
-                                        <div class="row">
-                                            <div class="col-md-5">
+                                        <!-- <div class="row">
+                                            <div class="col-md-6">
                                                 <h6 class="p-2" for="">Vendor Name</h6> 
                                                 <h6 class="p-2" for="">Vendor Email</h6> 
                                                 <h6 class="p-2" for="">Customer Name</h6>
@@ -348,40 +348,80 @@
                                                 <h6 class="p-2" for="">Payment Terms</h6>
                                                 <h6 class="p-2" for="">Total Amount</h6>
                                             </div>
-                                            <div class="col-md-7">
-                                                <h6 class="p-2" for="">: {{ bill.vendor_name }}</h6> <br>
-                                                <h6 class="p-2" for="">: {{ bill.vendor_email }}</h6> <br>
-                                                <h6 class="p-2" for="">: {{ bill.customer_name }}</h6><br>
+                                            <div class="col-md-6">
+                                                <h6 class="p-2" for="">: {{ bill.vendor_name }}</h6> 
+                                                <h6 class="p-2" for="">: {{ bill.vendor_email }}</h6> 
+                                                <h6 class="p-2" for="">: {{ bill.customer_name }}</h6>
                                                 <h6 class="p-2" for="">: {{ bill.customer_email }}</h6>
                                                 <h6 class="p-2" for="">: {{ bill.bill_date }}</h6>
-                                                <!-- <h6 class="p-2" for="">: {{ bill.due_date }}</h6> -->
                                                 <h6 class="p-2" for="">: {{bill.due_date}}</h6>
-                                                <h6 class="p-2" for="">: {{ bill.payment_method }}</h6><br>
-                                                <h6 class="p-2" for="">: {{ bill.repeat_every }}</h6><br>
-                                                <!-- <h6 class="p-2" for="">: NET {{ bill.payment_terms }}</h6><br> -->
-                                                <h6 class="p-2" for="">: {% if bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6><br>
+                                                <h6 class="p-2" for="">: {{ bill.payment_method }}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.repeat_every }}</h6>
+                                                <h6 class="p-2" for="">: {% if bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6>
                                                 <h6 class="p-2" for="">: {{ bill.total }}</h6>
 
                                             </div>
-                                        <!-- <h6 class="p-2" for="">Vendor Name  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.vendor_name }}</h6> 
-                                        <h6 class="p-2" for="">Vendor Email  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.vendor_email }}</h6> 
-                                        <h6 class="p-2" for="">Customer Name  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.customer_name }}</h6>
-                                        <h6 class="p-2" for="">Customer Email  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.customer_email }}</h6>
-                                        <h6 class="p-2" for="">Order Date  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.bill_date }}</h6>
-                                        <h6 class="p-2" for="">Expiry Date  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.due_date }}</h6>
-                                        <h6 class="p-2" for="">Payment Method  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.payment_method }}</h6>
-                                        <h6 class="p-2" for="">Repeat Every  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.repeat_every }}</h6>
-                                        <h6 class="p-2" for="">Payment Terms  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.payment_terms }}</h6>
                                         
-                                        <h6 class="p-2" for="">Total Amount &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; &nbsp;{{ bill.total }}</h6> -->
-                                       
+                                        </div> -->
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                        <h6 class="p-2" for="">Bill No</h6>
+                                        <h6 class="p-2" for="">Order No</h6>
+                                        <h6 class="p-2" for="">Sub-Total</h6> 
+                                        {% if bill.cgst != 0 %}
+                                        <h6 class="p-2" for="">CGST</h6>
+                                        {% endif %}
+                                        {% if bill.sgst != 0 %}
+                                        <h6 class="p-2" for="">SGST</h6>
+                                        {% endif %}
+                                        {% if bill.igst != 0 %}
+                                        <h6 class="p-2" for="">IGST</h6>
+                                        {% endif %}
+                                        {% if bill.tax_amount != 0 %}
+                                        <h6 class="p-2" for="">Tax Amount</h6>
+                                        {% endif %}
+                                        {% if bill.shipping_charge != 0 %}
+                                        <h6 class="p-2" for="">Ship Charge</h6>
+                                        {% endif %}
+                                        {% if bill.adjustment != 0 %}
+                                        <h6 class="p-2" for="">Adjustment</h6>
+                                        {% endif %}
+                                        <h6 class="p-2" for="">Total</h6>
                                     </div>
+                                
+                                        
+                                            <div class="col-md-6">
+                                                <h6 class="p-2">: {{ bill.bill_no }}</h6>  
+                                                <h6 class="p-2">: {{ bill.order_number }}</h6>
+                                                <h6 class="p-2">: {{ bill.sub_total|floatformat:2}}</h6>
+                                                {% if bill.cgst != 0 %}
+                                                <h6 class="p-2">: {{ bill.cgst|floatformat:2}}</h6>
+                                                {% endif %}
+                                                {% if bill.sgst != 0 %}
+                                                <h6 class="p-2">: {{ bill.sgst|floatformat:2}}</h6>
+                                                {% endif %}
+                                                {% if bill.igst != 0 %}
+                                                <h6 class="p-2">: {{ bill.igst|floatformat:2}}</h6>
+                                                {% endif %}
+                                                {% if bill.tax_amount != 0 %}
+                                                <h6 class="p-2" for="">: {{ bill.tax_amount|floatformat:2}}</h6>
+                                                {% endif %}
+                                                {% if bill.shipping_charge != 0 %}
+                                                <h6 class="p-2">: {{ bill.shipping_charge|floatformat:2}}</h6>
+                                                {% endif %}
+                                                {% if bill.adjustment != 0 %}
+                                                <h6 class="p-2">: {{ bill.adjustment|floatformat:2}}</h6>
+                                                {% endif %}
+                                                <h6 class="p-2">: {{ bill.total|floatformat:2}}</h6>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-7">
                                     <h2 class="p-2 text-dark mt-4" for=""></h2>
                                     <div class=" rounded p-2" style="background-color: #555;">
-                                        <div class="row">
+                                        <!-- <div class="row">
                                             <div class="col-md-6">
                                         <h6 class="p-2" for="">Bill No</h6>
                                         <h6 class="p-2" for="">Order No</h6>
@@ -411,54 +451,58 @@
                                             <div class="col-md-6">
                                                 <h6 class="p-2">: {{ bill.bill_no }}</h6>  
                                                 <h6 class="p-2">: {{ bill.order_number }}</h6>
-                                                <h6 class="p-2">: {{ bill.sub_total|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.sub_total|floatformat:2}}</h6>
                                                 {% if bill.cgst != 0 %}
-                                                <h6 class="p-2">: {{ bill.cgst|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.cgst|floatformat:2}}</h6>
                                                 {% endif %}
                                                 {% if bill.sgst != 0 %}
-                                                <h6 class="p-2">: {{ bill.sgst|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.sgst|floatformat:2}}</h6>
                                                 {% endif %}
                                                 {% if bill.igst != 0 %}
-                                                <h6 class="p-2">: {{ bill.igst|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.igst|floatformat:2}}</h6>
                                                 {% endif %}
                                                 {% if bill.tax_amount != 0 %}
-                                                <h6 class="p-2" for="">: {{ bill.tax_amount|floatformat:3}}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.tax_amount|floatformat:2}}</h6>
                                                 {% endif %}
                                                 {% if bill.shipping_charge != 0 %}
-                                                <h6 class="p-2">: {{ bill.shipping_charge|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.shipping_charge|floatformat:2}}</h6>
                                                 {% endif %}
-                                                <br>
                                                 {% if bill.adjustment != 0 %}
-                                                <h6 class="p-2">: {{ bill.adjustment|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.adjustment|floatformat:2}}</h6>
                                                 {% endif %}
-                                                <h6 class="p-2">: {{ bill.total|floatformat:3}}</h6>
+                                                <h6 class="p-2">: {{ bill.total|floatformat:2}}</h6>
 
                                             </div>
+                                        </div> -->
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <h6 class="p-2" for="">Vendor Name</h6> 
+                                                <h6 class="p-2" for="">Vendor Email</h6> 
+                                                <h6 class="p-2" for="">Customer Name</h6>
+                                                <h6 class="p-2" for="">Customer Email</h6>
+                                                <h6 class="p-2" for="">Order Date</h6>
+                                                <h6 class="p-2" for="">Expiry Date</h6>
+                                                <h6 class="p-2" for="">Pay Method</h6>
+                                                <h6 class="p-2" for="">Repeat Every</h6>
+                                                <h6 class="p-2" for="">Payment Terms</h6>
+                                                
+                                            </div>
+                                            <div class="col-md-7">
+                                                <h6 class="p-2" for="">: {{ bill.vendor_name }}</h6> 
+                                                <h6 class="p-2" for="">: {{ bill.vendor_email }}</h6> 
+                                                <h6 class="p-2" for="">: {{ bill.customer_name }}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.customer_email }}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.bill_date }}</h6>
+                                                <h6 class="p-2" for="">: {{bill.due_date}}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.payment_method }}</h6>
+                                                <h6 class="p-2" for="">: {{ bill.repeat_every }}</h6>
+                                                <h6 class="p-2" for="">: {% if bill.payment_terms == "recpt" %} Due on receipt {% else %}   NET {{ bill.payment_terms }} {% endif %}</h6>
+                                                
+
+                                            </div>
+                                        
                                         </div>
-                                        <!-- <h6 class="p-2" for="">Bill No  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.bill_no }}</h6>
-                                        <h6 class="p-2" for="">Order No &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; &nbsp;{{ bill.order_number }}</h6>
-                                        <h6 class="p-2" for="">Sub-Total  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.sub_total|floatformat:3}}</h6> 
-                                        {% if bill.cgst != 0 %}
-                                        <h6 class="p-2" for="">CGST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.cgst|floatformat:3}}</h6>
-                                        {% endif %}
-                                        {% if bill.sgst != 0 %}
-                                        <h6 class="p-2" for="">SGST  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.sgst|floatformat:3}}</h6>
-                                        {% endif %}
-                                        {% if bill.igst != 0 %}
-                                        <h6 class="p-2" for="">IGST  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.igst|floatformat:3}}</h6>
-                                        {% endif %}
-                                        {% if bill.shipping_charge != 0 %}
-                                        <h6 class="p-2" for="">Shipping Charge &nbsp;&nbsp; : {{ bill.shipping_charge|floatformat:3}}</h6>
-                                        {% endif %}
-                                        {% if items.discount != 0 %}
-                                        <h6 class="p-2" for="">Discount &nbsp;&nbsp;&nbsp;&nbsp; : {{ items.discount|floatformat:3}}</h6>
-                                        {% endif %}
-                                        {% if bill.adjustment != 0 %}
-                                        <h6 class="p-2" for="">Adjustment &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.adjustment|floatformat:3}}</h6>
-                                        {% endif %}
-                                        <h6 class="p-2" for="">Total &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.total|floatformat:3}}</h6> -->
-                                        <!-- <h6 class="p-2" for="">Paid &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.amt_paid|floatformat:3}}</h6>
-                                        <h6 class="p-2" for="">Balance &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.balance|floatformat:3}}</h6> -->
+                                        
                                     </div>
                                 </div>
                             </div>

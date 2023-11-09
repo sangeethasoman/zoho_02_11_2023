@@ -935,6 +935,10 @@ urlpatterns = [
     path('convert_challan_to_invoice/<int:id>/', views.convert_challan_to_invoice, name='convert_challan_to_invoice'),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+
+    #<---------------------------------------------------------------------------------------------->
+    path('pur_rec_customer_dropdown/',views.pur_rec_customer_dropdown,name='pur_rec_customer_dropdown'),
+    path('pur_rec_vendor_dropdown/',views.pur_rec_vendor_dropdown,name='pur_rec_vendor_dropdown'),
     
     
     
