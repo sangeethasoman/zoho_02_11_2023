@@ -75,7 +75,12 @@
                 console.log(qty);
                 console.log(rate);
                 console.log(tax);
-                $(this).find('.taxamount').val((qty * rate) * (tax / 100));
+                if(dic){
+                  $(this).find('.taxamount').val((qty * rate)-dic * (tax / 100));
+                }
+                else{
+                  $(this).find('.taxamount').val((qty * rate) * (tax / 100));
+                }
                 var taxamount = parseFloat($(this).find('.taxamount').val());
                 $(this).find('.amount').val((qty * rate)-dic);
 
@@ -96,6 +101,22 @@
 
         });
 
+        if(isGST()){ 
+            gst = taxamount / 2; 
+            $('#cgst').val(parseFloat(gst.toFixed(2)));
+            $('#sgst').val(parseFloat(gst.toFixed(2))); 
+            document.getElementById("tr_cgst").style.display = "table-row";
+            document.getElementById("tr_sgst").style.display = "table-row";
+            document.getElementById('tr_igst').style.display = "none";
+
+        }
+        else
+        { 
+            $('#igst').val(taxamount.toFixed(2)); 
+            document.getElementById('tr_igst').style.display = "table-row";
+            document.getElementById("tr_cgst").style.display = "none";
+            document.getElementById("tr_sgst").style.display = "none";
+        }
         // total = Math.round(total);
         // taxamount = Math.round(taxamount);
         $('#subtotal').val(total.toFixed(2));
@@ -103,46 +124,10 @@
 
         $('#total').val((taxamount + total).toFixed(2));
         // $('#baldue').val((taxamount + total).toFixed(2));
-
-        test();
+ 
     }
 
-    function test() {
-        // console.log('test');
-        d = 0;
-        // var pos = document.getElementById("pos").value;
-        // var sos = document.getElementById("sos").value;
-
-        // var pos = document.getElementById("pos").value.split("-")[1];
-        // var sos = document.getElementById("state").value;
-
-        if(isGST()){
-            // console.log(pos);
-            // console.log(state);
-            // console.log(taxamount);
-            gst = taxamount / 2;
-            // gst = Math.round (gst);
-            // console.log(gst);
-            $('#cgst').val(parseFloat(gst.toFixed(2)));
-            $('#sgst').val(parseFloat(gst.toFixed(2)));
-            $('#igst').val(parseFloat(d.toFixed(2)));
-            document.getElementById("tr_cgst").style.display = "table-row";
-            document.getElementById("tr_sgst").style.display = "table-row";
-            document.getElementById('tr_igst').style.display = "none";
-
-        }
-         else
-          {
-            // console.log(pos);
-            // console.log(state);
-            $('#igst').val(taxamount.toFixed(2));
-            $('#cgst').val(d.toFixed(2));
-            $('#sgst').val(d.toFixed(2));
-            document.getElementById('tr_igst').style.display = "table-row";
-            document.getElementById("tr_cgst").style.display = "none";
-            document.getElementById("tr_sgst").style.display = "none";
-        }
-    }
+   
     // Calculate total
     $(document).ready(function () {
         $('#shipping, #adjustment').on('change', function () {
@@ -432,7 +417,7 @@ else{
                     <tr id='row{{ forloop.counter }}'>
                         <td>
                             <div class='form-group'>
-                              <select class='form-control bg-transparent text-black border-0 item_select itm'
+                              <select class='form-control bg-transparent text-black border-0 item_select itm itemlist'
                                     name='item[]' id='item{{ forloop.counter }}'>
                                     <option class='text-dark' id="items_nms" value="{{item.item_name}}" >{{item.item_name}}</option>
                                     {% for i in items %}
@@ -2590,7 +2575,7 @@ $(document).ready(function () {
                 <td>
                     <div class='form-group'>
                         <select
-                            class='form-control bg-transparent text-black border-0 item_select' name='item[]'
+                            class='form-control bg-transparent text-black border-0 item_select itemlist' name='item[]'
                             id='item${RowCount}'>
                             <option class='text-dark'>Select Items</option>
                             <option class='text-dark' id='items_nms1' ></option>
@@ -2681,7 +2666,7 @@ $(document).ready(function () {
                 <td>
                     <div class='form-group'>
                         <select
-                            class='form-control bg-transparent text-black border-0 item_select' name='item[]'
+                            class='form-control bg-transparent text-black border-0 item_select itemlist' name='item[]'
                             id='item${RowCount}'>
                             <option class='text-dark ' value='${currentItem}'>${currentItem}</option>
                             {% for i in items %}
@@ -2831,21 +2816,13 @@ $(document).ready(function () {
       },
     
       success: function(response) {
-          v_name = response.fullname
-          sos = response.sos
-          email = response.email
-          gstin = response.gstin
-          console.log(v_name);
-          console.log(sos);
-          console.log(email);
-          document.getElementById("crt_vendor").innerHTML = v_name
-          document.getElementById('vendor_email').value = email
-          document.getElementById('sos').value = sos
-          document.getElementById('gst_no').value = gstin
-          document.getElementById("modalCustomer").reset();
+              
+          document.getElementById("modalVendor").reset();
+          reloadVendor()
       },
   });        
 });
+
 </script>
 
 <!-- create customer -->
@@ -2866,6 +2843,7 @@ if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
 else{
     cust_tax = $('#custtax2').val();
 }
+
 $.ajax({
   
   type : 'POST',
@@ -2905,21 +2883,59 @@ $.ajax({
     },
   
     success: function(response) {
-          c_name = response.name
-          plos = response.pos
-          email = response.email
-          console.log(c_name);
-          console.log(plos);
-          console.log(email);
-          document.getElementById("crt_cust").innerHTML = c_name
-          document.getElementById('customer_email').value = email
-          document.getElementById('pos').value = plos
-          document.getElementById("modalCustomer").reset();
-      // reloadCustomer();
+      document.getElementById("modalCustomer").reset();
+          reloadCustomer(); 
     },
 });        
 });
+function reloadCustomer() {
 
+$.ajax({ 
+  url: "{% url 'pur_rec_customer_dropdown' %}",
+  type: "GET",
+  dataType: "json",
+  data: $(this).serialize(),
+  csrfmiddlewaretoken: '{{ csrf_token }}',
+
+  success: function(data) { debugger
+    var dropdown = $('#customer_sel');
+    dropdown.empty();
+    dropdown.append($('<option></option>').data('data-pos', '').text('Select Customer')); // Add default option
+
+    $.each(data, function(index, cust) {
+      dropdown.append($('<option></option>').attr('value', cust.customerName).data('data-pos', cust.placeofsupply).text(cust.customerName));
+    });
+
+  },
+  error: function(xhr, status, error) {
+  console.error(xhr.responseText);
+  }
+});
+}
+
+function reloadVendor() {
+  debugger
+$.ajax({
+  url: "{% url 'vendor_dropdown' %}",
+  type: "GET",
+  dataType: "json",
+  data: $(this).serialize(),
+  csrfmiddlewaretoken: '{{ csrf_token }}',
+
+  success: function(data) {debugger
+    var dropdown = $('#vendor_sel');
+    dropdown.empty();
+    dropdown.append($('<option></option>').text('Select Vendor'));
+    $.each(data, function(key, value) {
+      debugger
+      dropdown.append($('<option></option>').attr('value', key).text(value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]));
+    });
+  },
+  error: function(xhr, status, error) {
+  console.error(xhr.responseText);
+  }
+});
+}
 </script>
 
 <!-- create account -->
@@ -3378,13 +3394,7 @@ $.ajax({
         },
   
         success: function (response) {
-          console.log(response)
-  
-          window.datast = response.name
-  
-          document.getElementById("items_nms").innerHTML = window.datast
-          document.getElementById("items_nms1").innerHTML = window.datast
-          const id_country_option = document.getElementById("item2");
+           reloadItem();
   
   
         }
@@ -3393,6 +3403,31 @@ $.ajax({
   
   
     }
+
+    
+function reloadItem() { debugger
+  $.ajax({
+    url: "{% url 'item_dropdown' %}",
+    type: "GET",
+    dataType: "json",
+    data: $(this).serialize(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+    success: function(data) {
+      var dropdown = $('.itemlist');
+      dropdown.empty();
+
+      $.each(data, function(key, value) {
+        
+          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+      });
+
+    },
+    error: function(xhr, status, error) {
+    console.error(xhr.responseText);
+    }
+  });
+}
   </script>
 
 <script>

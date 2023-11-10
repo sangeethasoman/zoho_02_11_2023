@@ -10826,13 +10826,17 @@ def bill_view(request, b_id):
     bills = PurchaseBills.objects.filter(user=user)
     bill = PurchaseBills.objects.get(id=b_id)
     items = PurchaseBillItems.objects.filter(purchase_bill=bill)
-    comment = purchase_comments.objects.filter(purchase_bill=b_id)
+    comment = purchase_comments.objects.filter(purchase_bill=b_id) 
+    cust = customer.objects.get(id = bill.cusname_id)
+    gst_or_igst = "GST" if isGST(cust.state) else "IGST"
+    print(cust.customerName)
     context = {
         'company': company,
         'bills': bills,
         'bill': bill,
         'items': items,
         'comments':comment,
+        'gst_or_igst':gst_or_igst
     }
     return render(request, 'bill_slip.html', context)
 
@@ -19693,18 +19697,24 @@ def convert_challan_to_invoice(request, id):
 def isGST(state):
     gst_state = ["[KL] Kerala","[KL]-Kerala","kerala","Kerala","Kerala [KL]","Kerala-[KL]"] 
     return gst_state.__contains__(state)
-    
+ 
+
 @login_required(login_url='login')
 def pur_rec_customer_dropdown(request):
     user = User.objects.get(id=request.user.id)
+    options = {}
     option_objects = customer.objects.filter(user_id=user.id)
-    return JsonResponse(option_objects)
- 
-@login_required(login_url='login')
-def  pur_rec_vendor_dropdown(request):
-    user = User.objects.get(id=request.user.id)
-    option_objects = vendor_table.objects.filter(user_id=user.id)
+    for option in option_objects:
+        options[option.id] = {
+            'id':option.id,
+            'customerName': option.customerName,
+            'customerEmail': option.customerEmail,
+            'GSTTreatment': option.GSTTreatment,
+            'GSTIN': option.GSTIN,
+            'placeofsupply': option.placeofsupply,
+        }
     return JsonResponse(options)
+ 
 
 
 

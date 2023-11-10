@@ -552,19 +552,19 @@
                                     <td style="font-weight:bold">Sub Total</td>
                                     <td style="font-weight:bold">: {{recur_bill.sub_total|floatformat:2}}</td>
                                 </tr>
-                                {% if recur_bill.igst != "" %}
+                                {% if gst_or_igst != "GST" %}
                                 <tr>
                                     <td style="font-weight:bold">IGST</td>
                                     <td style="font-weight:bold">{% if recur_bill.igst == None %} 0 {% else %} : {{recur_bill.igst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.cgst != "" %}
+                                {% if gst_or_igst == "GST" %}
                                 <tr>
                                     <td style="font-weight:bold">CGST</td>
                                     <td style="font-weight:bold">{% if recur_bill.cgst == None %} 0 {% else %} : {{recur_bill.cgst|floatformat:2}} {% endif %}</td>
                                 </tr>
                                 {% endif %}
-                                {% if recur_bill.sgst != "" %}
+                                {% if gst_or_igst == "GST" %}
                                 <tr>
                                     <td style="font-weight:bold">SGST</td>
                                     <td style="font-weight:bold">{% if recur_bill.sgst == None %} 0 {% else %} : {{recur_bill.sgst|floatformat:2}} {% endif %}</td>

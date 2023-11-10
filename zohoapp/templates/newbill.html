@@ -78,7 +78,12 @@ debugger
                 console.log(qty);
                 console.log(rate);
                 console.log(tax);
-                $(this).find('.taxamount').val((qty * rate) * (tax / 100));
+                if(dic){
+                  $(this).find('.taxamount').val((qty * rate)-dic * (tax / 100));
+                }
+                else{
+                  $(this).find('.taxamount').val((qty * rate) * (tax / 100));
+                }
                 var taxamount = parseFloat($(this).find('.taxamount').val());
                 $(this).find('.amount').val((qty * rate)-dic);
 
@@ -99,52 +104,32 @@ debugger
 
         });
 
-        // total = Math.round(total);
-        // taxamount = Math.round(taxamount);
-        $('#subtotal').val(total.toFixed(2));
-        $('#total_taxamount').val(taxamount.toFixed(2));
-
-        $('#total').val((taxamount + total).toFixed(2));
-        // $('#baldue').val((taxamount + total).toFixed(2));
-
-        test();
-    }
-
-    function test() {
-        // console.log('test');
-        d = 0;
-        var pos = document.getElementById("pos").value;
-        var sos = document.getElementById("sos").value;
-        console.log(pos);
-        console.log(sos);
-
-        if(isGST()){
-            // console.log(pos);
-            // console.log(state);
-            // console.log(taxamount);
-            gst = taxamount / 2;
-            // gst = Math.round (gst);
-            // console.log(gst);
+        if(isGST()){ 
+            gst = taxamount / 2; 
             $('#cgst').val(parseFloat(gst.toFixed(2)));
-            $('#sgst').val(parseFloat(gst.toFixed(2)));
-            $('#igst').val(parseFloat(d.toFixed(2)));
+            $('#sgst').val(parseFloat(gst.toFixed(2))); 
             document.getElementById("tr_cgst").style.display = "table-row";
             document.getElementById("tr_sgst").style.display = "table-row";
             document.getElementById('tr_igst').style.display = "none";
 
         }
         else
-        {
-            // console.log(pos);
-            // console.log(state);
-            $('#igst').val(taxamount.toFixed(2));
-            $('#cgst').val(d.toFixed(2));
-            $('#sgst').val(d.toFixed(2));
+        { 
+            $('#igst').val(taxamount.toFixed(2)); 
             document.getElementById('tr_igst').style.display = "table-row";
             document.getElementById("tr_cgst").style.display = "none";
             document.getElementById("tr_sgst").style.display = "none";
         }
+ 
+        $('#subtotal').val(total.toFixed(2));
+        $('#total_taxamount').val(taxamount.toFixed(2));
+
+        $('#total').val((taxamount + total).toFixed(2));
+        // $('#baldue').val((taxamount + total).toFixed(2));
+ 
     }
+
+     
     // Calculate total
     $(document).ready(function () {
         $('#shipping, #adjustment').on('change', function () {
@@ -391,7 +376,7 @@ debugger
                     <tr id='row1'>
                         <td>
                             <div class='form-group'><select
-                                    class='form-control bg-transparent text-black border-0 item_select itm'
+                                    class='form-control bg-transparent text-black border-0 item_select itme itemlist'
                                     name='item[]' id='item1'>
                                     <option class='text-dark'>Select Items</option>
                                     <option class='text-dark' id="items_nms" ></option>
@@ -2560,7 +2545,7 @@ debugger
                 <td>
                     <div class='form-group'>
                         <select
-                            class='form-control bg-transparent text-black border-0 item_select' name='item[]'
+                            class='form-control bg-transparent text-black border-0 item_select itemlist' name='item[]'
                             id='item${RowCount}'>
                             <option class='text-dark'>Select Items</option>
                             <option class='text-dark' id='items_nms1' ></option>
@@ -2803,19 +2788,10 @@ debugger
         
       },
     
-      success: function(response) {
-          v_name = response.fullname
-          sos = response.sos
-          email = response.email
-          gstin = response.gstin
-          console.log(v_name);
-          console.log(sos);
-          console.log(email);
-          document.getElementById("crt_vendor").innerHTML = v_name
-          document.getElementById('vendor_email').value = email
-          document.getElementById('sos').value = sos
-          document.getElementById('gst_no').value = gstin
-          document.getElementById("create_vendor").reset();
+      success: function(response) {debugger
+           
+          document.getElementById("modalVendor").reset();
+          reloadVendor()
       },
   });        
 });
@@ -2956,15 +2932,6 @@ $.ajax({
     },
   
     success: function(response) {
-          c_name = response.name
-          plos = response.pos
-          email = response.email
-          console.log(c_name);
-          console.log(plos);
-          console.log(email);
-          document.getElementById("crt_cust").innerHTML = c_name
-          document.getElementById('customer_email').value = email
-          document.getElementById('pos').value = plos
           document.getElementById("modalCustomer").reset();
           reloadCustomer();
     },
@@ -2974,7 +2941,7 @@ $.ajax({
 function reloadCustomer() {
 
 $.ajax({ 
-  url: "{% url 'customer_dropdown' %}",
+  url: "{% url 'pur_rec_customer_dropdown' %}",
   type: "GET",
   dataType: "json",
   data: $(this).serialize(),
@@ -2983,10 +2950,10 @@ $.ajax({
   success: function(data) { debugger
     var dropdown = $('#customer_sel');
     dropdown.empty();
-    dropdown.append($('<option></option>').text('Select Customer')); // Add default option
+    dropdown.append($('<option></option>').data('data-pos', '').text('Select Customer')); // Add default option
 
     $.each(data, function(index, cust) {
-      dropdown.append($('<option></option>').attr('value', cust.customerName).data('pos', cust.customerName).text(cust.customerName));
+      dropdown.append($('<option></option>').attr('value', cust.customerName).data('data-pos', cust.placeofsupply).text(cust.customerName));
     });
 
   },
@@ -2995,6 +2962,33 @@ $.ajax({
   }
 });
 }
+
+function reloadVendor() {
+  debugger
+$.ajax({
+  url: "{% url 'vendor_dropdown' %}",
+  type: "GET",
+  dataType: "json",
+  data: $(this).serialize(),
+  csrfmiddlewaretoken: '{{ csrf_token }}',
+
+  success: function(data) {debugger
+    var dropdown = $('#vendor_sel');
+    dropdown.empty();
+    dropdown.append($('<option></option>').text('Select Vendor'));
+    $.each(data, function(key, value) {
+      debugger
+      dropdown.append($('<option></option>').attr('value', key).text(value[1] + ' ' + value[2]).val(value[1] + ' ' + value[2]));
+    });
+  },
+  error: function(xhr, status, error) {
+  console.error(xhr.responseText);
+  }
+});
+}
+
+
+
 
 </script>
 
@@ -3503,20 +3497,39 @@ $.ajax({
           hsn: hsn,
         },
   
-        success: function (response) {
-          console.log(response)
-  
-          window.datast = response.name
-  
-          document.getElementById("items_nms").innerHTML = window.datast
-          document.getElementById("items_nms1").innerHTML = window.datast
-          const id_country_option = document.getElementById("item2");
+        success: function (response) { debugger
+          
+          //document.getElementById("create_item").reset();
+          reloadItem();
   
   
         }
   
       });
-  
+
+function reloadItem() { debugger
+  $.ajax({
+    url: "{% url 'item_dropdown' %}",
+    type: "GET",
+    dataType: "json",
+    data: $(this).serialize(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+    success: function(data) {
+      var dropdown = $('.itemlist');
+      dropdown.empty();
+
+      $.each(data, function(key, value) {
+        
+          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+      });
+
+    },
+    error: function(xhr, status, error) {
+    console.error(xhr.responseText);
+    }
+  });
+}
   
     }
   </script>
@@ -4791,13 +4804,11 @@ $('#due_date').prop('disabled', true);
       }
   }
 </script>
-
-<script>
-     $(document).ready(function () { 
-
-reloadCustomer();
-
-      })
-</script>
+ 
+<!-- <script>
+  $(document).ready(function(){
+   reloadItem();
+  });
+</script> -->
 
 {% endblock %}
