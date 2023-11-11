@@ -5731,7 +5731,7 @@ def view_recurring_bills(request,id):
     vend = vendor_table.objects.get(id = rbill.vendor_name.split(" ")[0])
     print(cust.state)
     print(company.state)
-    gst_or_igst = "GST" if isGST(cust.state) else "IGST"
+    gst_or_igst = "GST" if isGST(cust.placeofsupply) else "IGST"
     tax_total = [] 
     for b in billitem:
         if b.tax not in tax_total: 
@@ -10704,6 +10704,8 @@ def create_purchase_bill(request):
         vendor_gst = request.POST['gstin_inp']
         sos = request.POST['sos']
         cust_name = request.POST['customer_name']
+        cus=customer.objects.get(customerName=cust_name)   
+        custo=cus.id 
         cust_email = request.POST['customer_email']
         pos = request.POST['pos']
         bill_number = request.POST['bill_number']
@@ -10740,7 +10742,7 @@ def create_purchase_bill(request):
         status = 'Draft'
         balance = float(total) - float(amt_paid)
        
-        bill = PurchaseBills(user=user, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
+        bill = PurchaseBills(user=user,cusname_id=custo, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
                              vendor_email=vendor_email,vendor_gst_no=vendor_gst,source_of_supply=sos,bill_no=bill_number, order_number=order_number, bill_date=bill_date, 
                              due_date=due_date,payment_terms=terms, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, 
                              shipping_charge=shipping,total=total, status=status,attachment=attachment,repeat_every=repeat_every,
@@ -10765,6 +10767,8 @@ def create_purchase_bill1(request):
         vendor_gst = request.POST['gstin_inp']
         sos = request.POST['sos']
         cust_name = request.POST['customer_name']
+        cus=customer.objects.get(customerName=cust_name)   
+        custo=cus.id 
         cust_email = request.POST['customer_email']
         pos = request.POST['pos']
         bill_number = request.POST['bill_number']
@@ -10801,7 +10805,7 @@ def create_purchase_bill1(request):
         status = 'Save'
         balance = float(total) - float(amt_paid)
        
-        bill = PurchaseBills(user=user, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
+        bill = PurchaseBills(user=user,cusname_id=custo, customer_name=cust_name,customer_email= cust_email,place_of_supply=pos,vendor_name=vendor_name,
                              vendor_email=vendor_email,vendor_gst_no=vendor_gst,source_of_supply=sos,bill_no=bill_number, order_number=order_number, bill_date=bill_date, 
                              due_date=due_date,payment_terms=terms, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, 
                              shipping_charge=shipping,total=total, status=status,attachment=attachment,repeat_every=repeat_every,
@@ -10827,9 +10831,10 @@ def bill_view(request, b_id):
     bill = PurchaseBills.objects.get(id=b_id)
     items = PurchaseBillItems.objects.filter(purchase_bill=bill)
     comment = purchase_comments.objects.filter(purchase_bill=b_id) 
+    print(bill.cusname_id)
     cust = customer.objects.get(id = bill.cusname_id)
-    gst_or_igst = "GST" if isGST(cust.state) else "IGST"
-    print(cust.customerName)
+    gst_or_igst = "GST" if isGST(cust.placeofsupply) else "IGST"
+    print(cust.placeofsupply)
     context = {
         'company': company,
         'bills': bills,
@@ -10927,8 +10932,8 @@ def update_bills(request,pk):
         total = request.POST['total']
         amt_paid = request.POST['amtPaid']
         bill.balance = float(total) - float(amt_paid)
-        
-       
+        # cus=customer.objects.get(customerName=request.POST['customer_name']) 
+        # bill.cusname = cus.id
         old=bill.attachment
         new=request.FILES.get('file')
         if old != None and new == None:
@@ -17878,7 +17883,8 @@ def update_bills_save(request,pk):
         total = request.POST['total']
         amt_paid = request.POST['amtPaid']
         bill.balance = float(total) - float(amt_paid)
-       
+        cust = customer.objects.get(customerName=request.POST['customer_name'])
+        bill.cusname_id = cust.id
 
         old=bill.attachment
         new=request.FILES.get('file')

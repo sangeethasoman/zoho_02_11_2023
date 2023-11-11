@@ -368,13 +368,13 @@
                                         <h6 class="p-2" for="">Bill No</h6>
                                         <h6 class="p-2" for="">Order No</h6>
                                         <h6 class="p-2" for="">Sub-Total</h6> 
-                                        {% if bill.cgst != 0 %}
+                                        {% if gst_or_igst == "GST" %}
                                         <h6 class="p-2" for="">CGST</h6>
                                         {% endif %}
-                                        {% if bill.sgst != 0 %}
+                                        {% if gst_or_igst == "GST" %}
                                         <h6 class="p-2" for="">SGST</h6>
                                         {% endif %}
-                                        {% if bill.igst != 0 %}
+                                        {% if gst_or_igst != "GST" %}
                                         <h6 class="p-2" for="">IGST</h6>
                                         {% endif %}
                                         {% if bill.tax_amount != 0 %}
@@ -394,13 +394,13 @@
                                                 <h6 class="p-2">: {{ bill.bill_no }}</h6>  
                                                 <h6 class="p-2">: {{ bill.order_number }}</h6>
                                                 <h6 class="p-2">: {{ bill.sub_total|floatformat:2}}</h6>
-                                                {% if bill.cgst != 0 %}
+                                                {% if gst_or_igst == "GST" %}
                                                 <h6 class="p-2">: {{ bill.cgst|floatformat:2}}</h6>
                                                 {% endif %}
-                                                {% if bill.sgst != 0 %}
+                                                {% if gst_or_igst == "GST" %}
                                                 <h6 class="p-2">: {{ bill.sgst|floatformat:2}}</h6>
                                                 {% endif %}
-                                                {% if bill.igst != 0 %}
+                                                {% if gst_or_igst != "GST" %}
                                                 <h6 class="p-2">: {{ bill.igst|floatformat:2}}</h6>
                                                 {% endif %}
                                                 {% if bill.tax_amount != 0 %}
@@ -515,7 +515,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         
-                                        <h4 class="text-dark" style="font-size: 2.5rem ;text-align: right;">BILL {{gst_or_igst}}</h4>
+                                        <h4 class="text-dark" style="font-size: 2.5rem ;text-align: right;">BILL</h4>
                                         <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
                                         <h6 class="text-dark">{{ company.address }}</h6>
                                         <h6 class="text-dark">{{ company.city }},{{ company.state }}</h6>
@@ -592,19 +592,19 @@
                                         <td class="text-right">Sub-Total:</td>
                                         <td class="text-right">{{ bill.sub_total|floatformat:2}}</td>
                                     </tr>
-                                    {% if bill.cgst != 0 %}
+                                    {% if gst_or_igst == "GST" %}
                                     <tr style="text-align: right; border: 0px;">
                                         <td class="text-right">CGST:</td>
                                         <td class="text-right">{{ bill.cgst|floatformat:2}}</td>
                                     </tr>
                                     {% endif %}
-                                    {% if bill.sgst != 0 %}
+                                    {% if gst_or_igst == "GST" %}
                                     <tr style="text-align: right;">
                                         <td class="text-right">SGST:</td>
                                         <td class="text-right">{{ bill.sgst|floatformat:2}}</td>
                                     </tr>
                                     {% endif %}
-                                    {% if bill.igst != 0 %}
+                                    {% if gst_or_igst != "GST" %}
                                     <tr style="text-align: right;">
 
                                         <td class="text-right">IGST:</td>
